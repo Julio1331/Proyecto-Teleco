@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperatura y Humedad</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+        integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/boton.css">
+
+
+    <!-- script del gráfico de torta 3d -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <!-- fin del script del gráfico de torta 3d -->
+    <script src="js/tempHum.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-2">
+                <!-- menu de navegación -->
+                <nav class="navbar flex-column navbar-expand-md bg-dark navbar-dark ">
+                    <a class="navbar-brand" href="#">Menú</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#collapsibleNavbar">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                        <ul class="navbar-nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="panel.htm">Inicio</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="tempyhum.htm">Temperatura - Humedad</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="co2Gas.htm">Gas - CO2</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="mov.htm">Movimiento</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Configuración</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Cerrar Sesión</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            <div class="col-sm-10">
+                <div class="row backgroundColor">
+                    <div class="col-sm-12">
+                        <h2>Temperatura y Humedad</h2>
+                    </div>
+                </div>
+                <div class="row backgroundColor2">
+                    <div class="col-sm-12">
+                        <h3 class="historial">Historial</h3>
+                    </div>
+                </div>
+                <div class="row graficosTorta">
+                    <div class="col-sm-12 datetime">
+                        <h5>Seleccione Día </h5>
+                        <input type="date" id="myDate" value="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-10">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Temperatura</th>
+                                    <th>Humedad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>dd/mm/aaaa</td>
+                                    <td>hh:mm:ss</td>
+                                    <td>°C</td>
+                                    <td>%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-sm-2">
+                        <table class="table">
+                            <tbody id="sborde">
+                                <tr>
+                                    <th>Máximo</th>
+                                    <td>°C</td>
+                                    <td>H%</td>
+                                </tr>
+                            </tbody>
+                            <tbody id="sborde">
+                                <tr>
+                                    <th>Mínimo</th>
+                                    <td>°C</td>
+                                    <td>H%</td>
+                                </tr>
+                            </tbody>
+                            <tbody id="sborde">
+                                <tr>
+                                    <th>Promedio</th>
+                                    <td>°C</td>
+                                    <td>H%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row backgroundColor2">
+                    <div class="col-sm-12">
+                        <h3 class="historial">Representacion Gráfica</h3>
+                    </div>
+                </div>
+                <div class="row graficosTorta">
+                    <div class="col-sm-12 datetime">
+                        <h5>Seleccione Período </h5>
+                        <h6>Desde:</h6>
+                        <input type="date" id="myDate" value="">
+                        <h6>Hasta:</h6>
+                        <input type="date" id="myDate" value="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-10">
+
+                        <div class="botonera btn">
+
+                            <h6>Cartesiano</h6>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
+                            <h6>Torta</h6>
+
+
+                        </div>
+
+                        <!-- <div class="row graficosTorta">
+                            <div class="col-sm-6 grafTorta">
+                                <div id="temp" style="width: 600px; height: 500px;"></div>
+                            </div>
+                            <div class="col-sm-6 grafTorta">
+                                <div id="hum" style="width: 600px; height: 500px;"></div>
+                            </div>
+                        </div> -->
+                        <div class="row graficosTorta">
+                            <div class="col-sm-12 grafTorta">
+                                <div id="chart_div" style="height: 600px;"></div>
+                            </div>
+                        </div>
+
+                        <!-- <div -->
+                    </div>
+                    <div class="col-sm-2">
+                        <table class="table">
+                            <tbody id="sborde">
+                                <tr>
+                                    <th>Máximo</th>
+                                    <td>°C</td>
+                                    <td>H%</td>
+                                </tr>
+                            </tbody>
+                            <tbody id="sborde">
+                                <tr>
+                                    <th>Mínimo</th>
+                                    <td>°C</td>
+                                    <td>H%</td>
+                                </tr>
+                            </tbody>
+                            <tbody id="sborde">
+                                <tr>
+                                    <th>Promedio</th>
+                                    <td>°C</td>
+                                    <td>H%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
