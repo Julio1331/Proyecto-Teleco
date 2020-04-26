@@ -171,5 +171,5 @@ void loop() {
     Serial.println("WiFi Disconnected");
   }
   //Send an HTTP POST request every 30 seconds
-  delay(1000);
+  delay(10000);
 }

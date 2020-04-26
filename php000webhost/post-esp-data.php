@@ -15,7 +15,7 @@ $password = "4XY8C-9sQdac+]48";//anotado
 // If you change this value, the ESP32 sketch needs to match
 $api_key_value = "tPmAT5Ab3j7F9";
 
-$api_key=  $temp = $hum = $mov = "";
+$api_key=  $temp = $hum = $mov = $gas = $aire = "";
 
 $fecha = date("d-m-Y");
 $hora = date("H:i:s");
@@ -28,6 +28,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $temp = test_input($_POST["temp"]);
         $hum = test_input($_POST["hum"]);
         $mov = test_input($_POST["mov"]);
+        $gas = test_input($_POST["gas"]);
+        $aire = test_input($_POST["aire"]);
         
         // Create connection
         $conn = new mysqli($servername, $username, $password, $dbname);
@@ -46,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "Error: " . $sql . "<br>" . $conn->error;
         }
         
-        //inserción tabla hc-sr501
+        //inserción tabla hcsr501
         $sql1 = "INSERT INTO hcsr501 (mov, fecha, hora)
         VALUES ('" . $mov . "', '" . $fecha. "', '" . $hora. "')";
         
@@ -54,7 +56,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "New record created successfully";
         } 
         else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
+            echo "Error: " . $sql1 . "<br>" . $conn->error;
+        }
+        
+        //inserción tabla mq1
+        $sql2 = "INSERT INTO mq1 (gas, fecha, hora)
+        VALUES ('" . $gas . "', '" . $fecha. "', '" . $hora. "')";
+        
+        if ($conn->query($sql2) === TRUE) {
+            echo "New record created successfully";
+        } 
+        else {
+            echo "Error: " . $sql2 . "<br>" . $conn->error;
+        }
+        
+        //inserción tabla mq2
+        $sql3 = "INSERT INTO mq2 (aire, fecha, hora)
+        VALUES ('" . $aire . "', '" . $fecha. "', '" . $hora. "')";
+        
+        if ($conn->query($sql3) === TRUE) {
+            echo "New record created successfully";
+        } 
+        else {
+            echo "Error: " . $sql3 . "<br>" . $conn->error;
         }
     
         $conn->close();

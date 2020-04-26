@@ -15,7 +15,7 @@ WiFiServer server(80);
 // PINES 
 const int DHTPin = 5;  //Comunicación de datos en el pin 5 (GPIO 5 -- D1)
 const int movin =16; //pin digital D0 lectura del sensor de movimiento
-const char analogin = A0;
+const char analogin = A0; //entrada del mx
 
 //PINES DENTRADA AL MULTIPLEXER
 const int sigin = 0;//corresponde al pin D3 salida del mx
@@ -25,7 +25,7 @@ const int deco1 = 12;//corresponde al pin D6
 const int deco2 = 13;//corresponde al pin D7
 const int deco3 = 14;//corresponde al pin D5
 
-const int SLALT = 4;//corresponde al pin D2
+//const int SLALT = 4;//corresponde al pin D2
 
 const int EN = 2;//corresponde al pin D4
 
@@ -58,7 +58,7 @@ void setup() {
   pinMode(deco2,OUTPUT);
   pinMode(deco3,OUTPUT);
   pinMode(EN,OUTPUT);
-  pinMode(SLALT,OUTPUT);
+  //pinMode(SLALT,OUTPUT);
 
   // Conectando a la red WiFi
   Serial.println();
@@ -85,7 +85,7 @@ void setup() {
 
 // Esta sección se repetirá continuamente
 void loop() {
-  digitalWrite(SLALT,HIGH);
+  //digitalWrite(SLALT,HIGH);
   // Esperando nuevas conexiones (clientes)
   WiFiClient client = server.available();
 
