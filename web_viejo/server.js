@@ -20,6 +20,10 @@ app.get('/login.htm', function (req, res) {
    res.sendFile( __dirname + "/" + "login.htm" );
 })
 app.use(express.static('public'));
+app.get('/login.htm', function (req, res) {
+   res.sendFile( __dirname + "/" + "login.js" );
+})
+app.use(express.static('public'));
 app.get('/panel.htm', function (req, res) {
    res.sendFile( __dirname + "/" + "panel.htm" );
 })

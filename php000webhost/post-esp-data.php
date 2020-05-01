@@ -17,7 +17,7 @@ $api_key_value = "tPmAT5Ab3j7F9";
 
 $api_key=  $temp = $hum = $mov = $gas = $aire = "";
 
-$fecha = date("d-m-Y");
+$fecha = date("Y-m-d");
 $hora = date("H:i:s");
 
 
