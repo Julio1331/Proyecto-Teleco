@@ -14,7 +14,7 @@ WiFiServer server(80);
 
 // PINES 
 const int DHTPin = 5;  //Comunicación de datos en el pin 5 (GPIO 5 -- D1)
-const int movin =16; //pin digital D0 lectura del sensor de movimiento
+const int movin = 16; //pin digital D0 lectura del sensor de movimiento
 
 // Iniciando sensor
 DHT dht(DHTPin, DHTTYPE);
@@ -63,6 +63,7 @@ void setup() {
 
 // Esta sección se repetirá continuamente
 void loop() {
+  
   // Esperando nuevas conexiones (clientes)
   WiFiClient client = server.available();
 
@@ -106,7 +107,7 @@ void loop() {
             strcpy(movimiento,"Sin Movimiento");
           }
  
-          
+          Serial.println(h);
           //Maquetación de la página con HTML
           client.println("HTTP/1.1 200 OK");
           client.println("Content-Type: text/html");
