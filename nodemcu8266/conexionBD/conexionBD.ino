@@ -27,9 +27,12 @@ const int deco3 = 14;//corresponde al pin D5
 
 const int EN = 2;//corresponde al pin D4
 
-//variables
-int contmin=0;
-float arrhum[30],promhum,sumhum;
+//variables para el acondicionamieto de variables a transmitir 
+int contmin = 0, mov = 0;//contmin lleva la cuenta de los minutos
+float arrhum[30], promhum, sumhum;
+float arrgas[30], promgas, sumgas;
+float arrc[30], promc, sumc;
+float arrtemp[30], promtemp, sumtemp;
 
 
 // Iniciando sensor
@@ -92,132 +95,188 @@ void loop() {
     HTTPClient http;
     WiFiClient client;
 
+    
+
+    //************SENSADO Y VERIFICACION DE LECTURAS CONFIABLES**********************//
+
     //SENSADO DE HUMEDAD Y TEMPERATURA
     //lectura de humedad
     float h = dht.readHumidity();
+
+    if (isnan(h) || h > 90 || h < 20  ) {//verifica que el valor sea un numero y que este dentro del rango de lectura del sensor
+      //no se guarda el dato
+      Serial.println("dato de humedad erroneo");
+    } else {
+      //corro los valores en el arreglo
+      for (int i = 0; i < 29; i++) { //recorro hasta el último menos uno(actualizo arreglo)
+        arrhum[i] = arrhum[i + 1];
+      }
+      arrhum[29] = h;
+    }
+
+
+
     // Leyendo temperatura en Celsius (es la unidad de medición por defecto)
     celsiusTemp = dht.readTemperature();
-    
 
-    
-        
-    if(isnan(h) || h>90 || h<20  ){
-      //no se guarda el dato 
+    if (isnan(celsiusTemp) || celsiusTemp > 50 || celsiusTemp < 0  ) {
+      //no se guarda el dato
       Serial.println("dato de humedad erroneo");
-    }else{
+    } else {
       //corro los valores en el arreglo
-      for(int i=0;i<28;i++){//recorro hasta el último menos uno
-        arrhum[i]=arrhum[i+1];
+      for (int i = 0; i < 29; i++) { //recorro hasta el último menos uno
+        arrtemp[i] = arrtemp[i + 1];
       }
-      arrhum[29]=h;
+      arrtemp[29] = celsiusTemp;
     }
-    //calculo del promedio
-     
-    if(contmin==29){
-      contmin=0;
-      for(int i=0;i<30;i++){
-        sumhum = sumhum + arrhum[i];
-          Serial.println(sumhum);
-      }
-      promhum=sumhum/30;
-      sumhum=0;
-    }
-    contmin++;
-   Serial.print(contmin);
-    Serial.print("  lectura: ");
-    Serial.println(h);
-    Serial.print("PROMEDIO: ");
-    Serial.println(promhum);
-    
-    //movimiento
-    if (stadomov==1){
-      mov=1;
-    }
-    //dentro del if de los 30 minutos contmin==29
-    //SE TRANSMITE EL UNO Y EN LA LINEA SIGUIENTE SE VUELVE A PONER MOV EN CERO
-    
+
+
     //SENSADO DE MOVIMIENTO
     int estadomov = (digitalRead(movin));
-    Serial.println(estadomov);
-//
-//
-//    //ENTRADA ANALÓGICA
-//    digitalWrite(EN, LOW); //habilitacion del multiplexer activo en bajo
-//
-//    //SENSADO DE GAS NATURAL
-//    //Elijo la entrada del mx C0, correspondiente al sensor MQ4
-//    digitalWrite(deco0, LOW);
-//    digitalWrite(deco1, LOW);
-//    digitalWrite(deco2, LOW);
-//    digitalWrite(deco3, LOW);
-//    delay(50);// espero a que la salida sea estable
-//    int gascad = analogRead(analogin);
-//    float gasten=(gascad*3.3)/1024;
-//    gasNatural = 661.4*(gasten*gasten*gasten)-2514.4*(gasten*gasten)+2669.3*gasten-12.7;//ecuación para sensor de gas natural
-//    delay(50);// espero lectura sea confiable
-//    //  SENSOR DE GAS BUTANO AJUSTE DE VALORES ---> ("JDG")/*************/
-//    //int gasBcad = analogRead(analogin);
-//    //float gasBten = (gasBten*3.3)/1024;
-//    //gasNatural = 196*(gasBten*gasBten*gasBten*gasBten*gasBten*gasBten)-2875*(gasBten*gasBten*gasBten*gasBten*gasBten)+16599*(gasBten*gasBten*gasBten*gasBten)-46834*(gasBten*gasBten*gasBten)+64631*(gasBte*gasBten)-34735*(gasBten);
-//    //delay(50);
-//    /**********************/
-//    
-//    //SENSADO DE CO2
-//    //Elijo la entrada del mx C1, correspondiente al sensor MQ7
-//    digitalWrite(deco0, HIGH);
-//    digitalWrite(deco1, LOW);
-//    digitalWrite(deco2, LOW);
-//    digitalWrite(deco3, LOW);
-//    delay(50);// espero a que la salida sea estable
-//    int co2cad = analogRead(analogin);
-//    float co2ten = (co2cad*3.3)/1024;
-//    CO2 = 33*(co2ten*co2ten*co2ten*co2ten*co2ten)-437.8*(co2ten*co2ten*co2ten*co2ten)+2156.5*(co2ten*co2ten*co2ten)-4657.2*(co2ten*co2ten)+3735.5*co2ten;
-//    delay(50);// espero lectura sea confiable
-//    //SENSOR DE CALIDAD DE AIRE -->> ("JDG")
-////    int co2Bcad = analogRead(analogin);
-////    float co2Bten = (co2Bcad*3.3)/1024;
-////    CO2 = 81.6*(co2Bten*co2Bten*co2Bten*co2Bten*co2Bten)-619.8*(co2Bten*co2Bten*co2Bten*co2Bten)+1763.9*(co2Bten*co2Bten*co2Bten)-2183.1*(co2Bten*co2Bten)+1051.5*(co2Bten);
-////    delay(50);
-//
-//    
-//    
-//    
-//    //***********IF********
-//    // Prepare your HTTP POST request data
-//
-//    String httpRequestData = "api_key=" + apiKeyValue + "&temp=" + celsiusTemp + "&hum=" + h + "&mov=" + estadomov + "&gas=" + gasNatural + "&aire=" + CO2 + "";
-//    
-//
-//    // String httpRequestData = "api_key=" + apiKeyValue + "&sensor=" + sensorName + "&location=" + sensorLocation + "&value1=" + celsiusTemp + "&value2=" + fahrenheitTemp + "&value3=" + humidityTemp + "";
-//
-//    if (http.begin(serverName)) {
-//      Serial.println("conecto");
-//    } else {
-//      Serial.println("error");
-//    }
-//    http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-//    int httpResponseCode = http.POST(httpRequestData);
-//    Serial.println(httpResponseCode);
-//
-//
-//    Serial.print("httpRequestData: ");
-//    Serial.println(httpRequestData);
-//
-//
-//    if (httpResponseCode > 0) {
-//      Serial.print("HTTP Response code: ");
-//      Serial.println(httpResponseCode);
-//    }
-//    else {
-//      Serial.print("Error code: ");
-//      Serial.println(httpResponseCode);
-//    }
-//    // Free resources
-//    http.end();
-//    //***************END IF**********
+
+    if (estadomov == 1) {
+      mov = 1;
+    }
 
 
-    
+    //ENTRADA ANALÓGICA
+    digitalWrite(EN, LOW); //habilitacion del multiplexer activo en bajo
+
+
+    //SENSADO DE GAS NATURAL
+    //Elijo la entrada del mx C0, correspondiente al sensor MQ4
+    digitalWrite(deco0, LOW);
+    digitalWrite(deco1, LOW);
+    digitalWrite(deco2, LOW);
+    digitalWrite(deco3, LOW);
+    delay(50);// espero a que la salida sea estable
+    int gascad = analogRead(analogin);
+    float gasten = (gascad * 3.3) / 1024;
+    gasNatural = 661.4 * (gasten * gasten * gasten) - 2514.4 * (gasten * gasten) + 2669.3 * gasten - 12.7; //ecuación para sensor de gas natural
+    delay(50);// espero lectura sea confiable
+    //  SENSOR DE GAS BUTANO AJUSTE DE VALORES ---> ("JDG")/*************/
+    //int gasBcad = analogRead(analogin);
+    //float gasBten = (gasBten*3.3)/1024;
+    //gasNatural = 196*(gasBten*gasBten*gasBten*gasBten*gasBten*gasBten)-2875*(gasBten*gasBten*gasBten*gasBten*gasBten)+16599*(gasBten*gasBten*gasBten*gasBten)-46834*(gasBten*gasBten*gasBten)+64631*(gasBte*gasBten)-34735*(gasBten);
+    //delay(50);
+    /**********************/
+    if (isnan(gasNatural) || gasNatural < 300 || gasNatural > 10000  ) {
+      //no se guarda el dato
+      Serial.println("error en la lectura de consentracion gas");
+    } else {
+      //corro los valores en el arreglo
+      for (int i = 0; i < 29; i++) { //recorro hasta el último menos uno
+        arrgas[i] = arrgas[i + 1];
+      }
+      arrgas[29] = gasNatural;
+    }
+
+
+    //SENSADO DE CO2
+    //Elijo la entrada del mx C1, correspondiente al sensor MQ7
+    digitalWrite(deco0, HIGH);
+    digitalWrite(deco1, LOW);
+    digitalWrite(deco2, LOW);
+    digitalWrite(deco3, LOW);
+    delay(50);// espero a que la salida sea estable
+    int co2cad = analogRead(analogin);
+    float co2ten = (co2cad * 3.3) / 1024;
+    CO2 = 33 * (co2ten * co2ten * co2ten * co2ten * co2ten) - 437.8 * (co2ten * co2ten * co2ten * co2ten) + 2156.5 * (co2ten * co2ten * co2ten) - 4657.2 * (co2ten * co2ten) + 3735.5 * co2ten;
+    delay(50);// espero lectura sea confiable
+    //SENSOR DE CALIDAD DE AIRE -->> ("JDG")
+    //    int co2Bcad = analogRead(analogin);
+    //    float co2Bten = (co2Bcad*3.3)/1024;
+    //    CO2 = 81.6*(co2Bten*co2Bten*co2Bten*co2Bten*co2Bten)-619.8*(co2Bten*co2Bten*co2Bten*co2Bten)+1763.9*(co2Bten*co2Bten*co2Bten)-2183.1*(co2Bten*co2Bten)+1051.5*(co2Bten);
+    //    delay(50);
+    Serial.println(co2cad);
+    Serial.println(CO2);
+    if (isnan(CO2) || CO2 < 10 || CO2 > 500 ) {
+      //no se guarda el dato
+      Serial.println("error en la lectura de consentracion CO2");
+    } else {
+      //corro los valores en el arreglo
+      for (int i = 0; i < 29; i++) { //recorro hasta el último menos uno
+        arrc[i] = arrc[i + 1];
+      }
+      arrc[29] = CO2;
+    }
+
+
+
+
+  //************CALCULO DE PROMEDIOS Y TRANSMICION DE DATOS**********************//
+    Serial.print("minuto: ");
+    Serial.println(contmin);
+    if (contmin == 29) {
+      Serial.println("transmision de 30 min");
+      //acondicionamiento temperatura
+      for (int i = 0; i < 30; i++) {
+        sumtemp = sumtemp + arrtemp[i];
+        Serial.println(arrtemp[i]);
+      }
+      promtemp = sumtemp / 30;
+      
+      //condicionamiento de humedad
+      for (int i = 0; i < 30; i++) {
+        sumhum = sumhum + arrhum[i];
+      }
+      promhum = sumhum / 30;
+      
+      //acondicionamiento de movimiento
+      //solo se transmite la variable mov
+
+      //acondicionamiento de gas
+      for (int i = 0; i < 30; i++) {
+        sumgas = sumgas + arrgas[i];
+      }
+      promgas = sumgas / 30;
+      
+     //acondicionamiento de co2
+     for (int i = 0; i < 30; i++) {
+        sumc = sumc + arrc[i];
+      }
+      promc = sumc / 30;
+      
+      // Prepare your HTTP POST request data
+
+      String httpRequestData = "api_key=" + apiKeyValue + "&temp=" + promtemp + "&hum=" + promhum + "&mov=" + mov + "&gas=" + promgas + "&aire=" + promc + "";
+
+
+      // String httpRequestData = "api_key=" + apiKeyValue + "&sensor=" + sensorName + "&location=" + sensorLocation + "&value1=" + celsiusTemp + "&value2=" + fahrenheitTemp + "&value3=" + humidityTemp + "";
+
+      if (http.begin(serverName)) {
+        Serial.println("conecto");
+      } else {
+        Serial.println("error");
+      }
+      http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+      int httpResponseCode = http.POST(httpRequestData);
+      Serial.println(httpResponseCode);
+
+
+      Serial.print("httpRequestData: ");
+      Serial.println(httpRequestData);
+
+
+      if (httpResponseCode > 0) {
+        Serial.print("HTTP Response code: ");
+        Serial.println(httpResponseCode);
+      }
+      else {
+        Serial.print("Error code: ");
+        Serial.println(httpResponseCode);
+      }
+      // Free resources
+      http.end();
+
+      //reinicio de sumadores y variables correspondientes
+      contmin = 0;
+      sumtemp = 0;
+      sumhum = 0;
+      mov = 0;
+      sumgas = 0;
+      sumc = 0;
+    }
   }
   else {
     Serial.println("WiFi Disconnected");
@@ -225,4 +284,5 @@ void loop() {
   //Send an HTTP POST request every 30 seconds
   //delay(1800000);//espera media hora
   delay(500);
+  contmin++;//contador de minutos llega hasta 29
 }
