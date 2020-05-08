@@ -90,7 +90,7 @@ void setup() {
 }
 
 void loop() {
-  //Check WiFi connection status
+ // Check WiFi connection status
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
     WiFiClient client;
@@ -181,15 +181,14 @@ void loop() {
     delay(50);// espero a que la salida sea estable
     int co2cad = analogRead(analogin);
     float co2ten = (co2cad * 3.3) / 1024;
-    CO2 = 33 * (co2ten * co2ten * co2ten * co2ten * co2ten) - 437.8 * (co2ten * co2ten * co2ten * co2ten) + 2156.5 * (co2ten * co2ten * co2ten) - 4657.2 * (co2ten * co2ten) + 3735.5 * co2ten;
+    CO2 = - 0.7 * (co2ten * co2ten * co2ten * co2ten * co2ten* co2ten * co2ten * co2ten) + 17.9 * (co2ten * co2ten * co2ten * co2ten * co2ten * co2ten * co2ten) - 170.2 * (co2ten * co2ten * co2ten * co2ten * co2ten * co2ten) + 828.7 * (co2ten * co2ten * co2ten * co2ten *co2ten) - 2249.3 * (co2ten * co2ten * co2ten * co2ten) + 3412.5 * (co2ten * co2ten *co2ten) - 2678.1 *(co2ten * co2ten) + 849.3 * co2ten;
     delay(50);// espero lectura sea confiable
     //SENSOR DE CALIDAD DE AIRE -->> ("JDG")
     //    int co2Bcad = analogRead(analogin);
     //    float co2Bten = (co2Bcad*3.3)/1024;
     //    CO2 = 81.6*(co2Bten*co2Bten*co2Bten*co2Bten*co2Bten)-619.8*(co2Bten*co2Bten*co2Bten*co2Bten)+1763.9*(co2Bten*co2Bten*co2Bten)-2183.1*(co2Bten*co2Bten)+1051.5*(co2Bten);
     //    delay(50);
-    Serial.println(co2cad);
-    Serial.println(CO2);
+    
     if (isnan(CO2) || CO2 < 10 || CO2 > 500 ) {
       //no se guarda el dato
       Serial.println("error en la lectura de consentracion CO2");
@@ -212,7 +211,6 @@ void loop() {
       //acondicionamiento temperatura
       for (int i = 0; i < 30; i++) {
         sumtemp = sumtemp + arrtemp[i];
-        Serial.println(arrtemp[i]);
       }
       promtemp = sumtemp / 30;
       
