@@ -18,7 +18,12 @@ $api_key_value = "tPmAT5Ab3j7F9";
 $api_key=  $temp = $hum = $mov = $gas = $aire = "";
 
 $fecha = date("Y-m-d");
-$hora = date("H:i:s");
+$horaServ = date('H:i');
+$nuevaHora = strtotime ( '-3 hour' , strtotime ( $horaServ ) ) ;// corrige la zona horaria
+$nuevaHora = date ( 'H:i' , $nuevaHora );//le da formato a la hora
+$hora=$nuevaHora;//asignamos a la variable que se guarda en la BD
+
+
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

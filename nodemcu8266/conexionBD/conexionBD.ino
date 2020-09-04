@@ -105,7 +105,7 @@ void loop() {
 
     if (isnan(h) || h > 90 || h < 20  ) {//verifica que el valor sea un numero y que este dentro del rango de lectura del sensor
       //no se guarda el dato
-      Serial.println("dato de humedad erroneo");
+      Serial.println("lectura de humedad erronea");
     } else {
       //corro los valores en el arreglo
       for (int i = 0; i < 29; i++) { //recorro hasta el último menos uno(actualizo arreglo)
@@ -121,7 +121,7 @@ void loop() {
 
     if (isnan(celsiusTemp) || celsiusTemp > 50 || celsiusTemp < 0  ) {
       //no se guarda el dato
-      Serial.println("dato de humedad erroneo");
+      Serial.println("lectura de temperatura erronea");
     } else {
       //corro los valores en el arreglo
       for (int i = 0; i < 29; i++) { //recorro hasta el último menos uno
@@ -154,11 +154,21 @@ void loop() {
     float gasten = (gascad * 3.3) / 1024;
     gasNatural = 661.4 * (gasten * gasten * gasten) - 2514.4 * (gasten * gasten) + 2669.3 * gasten - 12.7; //ecuación para sensor de gas natural
     delay(50);// espero lectura sea confiable
-    //  SENSOR DE GAS BUTANO AJUSTE DE VALORES ---> ("JDG")/*************/
-    //int gasBcad = analogRead(analogin);
-    //float gasBten = (gasBten*3.3)/1024;
-    //gasNatural = 196*(gasBten*gasBten*gasBten*gasBten*gasBten*gasBten)-2875*(gasBten*gasBten*gasBten*gasBten*gasBten)+16599*(gasBten*gasBten*gasBten*gasBten)-46834*(gasBten*gasBten*gasBten)+64631*(gasBte*gasBten)-34735*(gasBten);
-    //delay(50);
+//      SENSOR DE GAS BUTANO AJUSTE DE VALORES mq6 ---> ("JDG")/*************/
+//    int gasBcad = analogRead(analogin);
+//    float gasBten = (gasBten*3.3)/1024;
+//    gasNatural = 45*(gasBten*gasBten*gasBten*gasBten*gasBten*gasBten*gasBten) - 672*(gasBten*gasBten*gasBten*gasBten*gasBten*gasBten) + 3979*(gasBten*gasBten*gasBten*gasBten*gasBten) - 11956*(gasBten*gasBten*gasBten*gasBten) + 19222*(gasBten*gasBten*gasBten) - 15692*(gasBte*gasBten) + 5313 *(gasBten);
+//    delay(50);
+// if (isnan(gasNatural) || gasNatural < 300 || gasNatural > 10000  ) {
+//      //no se guarda el dato
+//      Serial.println("error en la lectura de consentracion gas");
+//    } else {
+//      //corro los valores en el arreglo
+//      for (int i = 0; i < 29; i++) { //recorro hasta el último menos uno
+//        arrgas[i] = arrgas[i + 1];
+//      }
+//      arrgas[29] = gasNatural;
+//    }
     /**********************/
     if (isnan(gasNatural) || gasNatural < 300 || gasNatural > 10000  ) {
       //no se guarda el dato
@@ -183,12 +193,22 @@ void loop() {
     float co2ten = (co2cad * 3.3) / 1024;
     CO2 = - 0.7 * (co2ten * co2ten * co2ten * co2ten * co2ten* co2ten * co2ten * co2ten) + 17.9 * (co2ten * co2ten * co2ten * co2ten * co2ten * co2ten * co2ten) - 170.2 * (co2ten * co2ten * co2ten * co2ten * co2ten * co2ten) + 828.7 * (co2ten * co2ten * co2ten * co2ten *co2ten) - 2249.3 * (co2ten * co2ten * co2ten * co2ten) + 3412.5 * (co2ten * co2ten *co2ten) - 2678.1 *(co2ten * co2ten) + 849.3 * co2ten;
     delay(50);// espero lectura sea confiable
-    //SENSOR DE CALIDAD DE AIRE -->> ("JDG")
-    //    int co2Bcad = analogRead(analogin);
-    //    float co2Bten = (co2Bcad*3.3)/1024;
-    //    CO2 = 81.6*(co2Bten*co2Bten*co2Bten*co2Bten*co2Bten)-619.8*(co2Bten*co2Bten*co2Bten*co2Bten)+1763.9*(co2Bten*co2Bten*co2Bten)-2183.1*(co2Bten*co2Bten)+1051.5*(co2Bten);
-    //    delay(50);
-    
+//    SENSOR DE CALIDAD DE AIRE mq135 -->> ("JDG")
+//        int co2Bcad = analogRead(analogin);
+//        float co2Bten = (co2Bcad*3.3)/1024;
+//        CO2 = -17.3*(co2Bten*co2Bten*co2Bten*co2Bten*co2Bten*co2Bten*co2Bten)+249.3*(co2Bten*co2Bten*co2Bten*co2Bten*co2Bten*co2Bten)-1338.9*(co2Bten*co2Bten*co2Bten*co2Bten*co2Bten)+3471.7*(co2Bten*co2Bten*co2Bten*co2Bten)-4553.7*(co2Bten*co2Bten*co2Bten)+2826.5*(co2Bten*co2Bten)-562.6*(co2Bten);
+//        delay(50);
+//    if (isnan(CO2) || CO2 < 10 || CO2 > 1000 ) {
+//      //no se guarda el dato
+//      Serial.println("error en la lectura de consentracion CO2");
+//    } else {
+//      //corro los valores en el arreglo
+//      for (int i = 0; i < 29; i++) { //recorro hasta el último menos uno
+//        arrc[i] = arrc[i + 1];
+//      }
+//      arrc[29] = CO2;
+//    }
+
     if (isnan(CO2) || CO2 < 10 || CO2 > 500 ) {
       //no se guarda el dato
       Serial.println("error en la lectura de consentracion CO2");
@@ -280,7 +300,6 @@ void loop() {
     Serial.println("WiFi Disconnected");
   }
   //Send an HTTP POST request every 30 seconds
-  //delay(1800000);//espera media hora
-  delay(500);
+  delay(60000);//espera un minuto
   contmin++;//contador de minutos llega hasta 29
 }
