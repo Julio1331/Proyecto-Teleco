@@ -6,8 +6,9 @@
 
 
 // Nombre de la red y su contraseña
-const char* ssid = "Speedy-0EC404";
-const char* password = "9376345430";
+//const char* ssid = "Speedy-0EC404";
+const char* ssid = "SPEEDY-A4B201";
+const char* password = "12345678";
 
 // El Web Server se abrirá en el puerto 80
 WiFiServer server(80);

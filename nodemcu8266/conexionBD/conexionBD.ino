@@ -47,8 +47,8 @@ static float CO2;
 
 
 // Replace with your network credentials
-const char* ssid     = "Speedy-0EC404";
-const char* password = "9376345430";
+const char* ssid     = "SPEEDY-A4B201";
+const char* password = "12345678";
 
 // REPLACE with your Domain name and URL path or IP address with path
 const char* serverName = "http://sensorcasasj.000webhostapp.com/post-esp-data.php";
