@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -13,7 +16,8 @@
         integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="../css/estilos.css">
+    <link rel="stylesheet" href="../css/boton.css">
   
 </head>
 
@@ -31,16 +35,16 @@
                     <div class="collapse navbar-collapse" id="collapsibleNavbar">
                         <ul class="navbar-nav flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="panel.htm">Inicio</a>
+                                <a class="nav-link" href="panel.php">Inicio</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="tempyhum.htm">Temperatura - Humedad</a>
+                                <a class="nav-link" href="tempyhum.php">Temperatura - Humedad</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="co2Gas.htm">Gas - CO2</a>
+                                <a class="nav-link" href="co2Gas.php">Gas - CO2</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="mov.htm">Movimiento</a>
+                                <a class="nav-link" href="mov.php">Movimiento</a>
                             </li>
                             <!-- <li class="nav-item">
                                 <a class="nav-link" href="#">Configuración</a>
@@ -66,26 +70,55 @@
                 <div class="row graficosTorta">
                     <div class="col-sm-12 datetime">
                         <h5>Seleccione Día </h5>
-                        <input type="date" id="myDate" value="">
+                        <form action="mov.php" method="post">
+                            <input name='dia' type='date' id='myDate' value=''>
+                            <button type="submit">Buscar</button>
+                            <?php
+                                error_reporting(0);
+                                $dia=$_POST['dia'];
+                                echo $dia;
+                                error_reporting(E_ALL);
+                            ?>
+                        </form>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-10">
+                    <div class="col-sm-12">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th>Fecha</th>
                                     <th>Hora</th>
-                                    <th>####</th>
+                                    <th>Movimiento Detectado</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>dd/mm/aaaa</td>
-                                    <td>hh:mm:ss</td>
-                                    <td>####</td>
-                                </tr>
-                            </tbody>
+                            <?php
+                                //traigo movimiento
+                                require_once('conexion.php');
+                                $sql = "SELECT * FROM hcsr501 WHERE fecha='$dia' ORDER BY id_mov DESC LIMIT 12";
+                                $result = mysqli_query($con, $sql);
+
+                                if(mysqli_num_rows($result) > 0){
+                                    //output data of each row
+                                    while($row = mysqli_fetch_assoc($result)) {
+                                        // echo "id: " . $row["id"]. " - Temp: " . $row["temp"].  "<br>";
+                                        echo "<tbody>";
+                                        echo "<tr>";
+                                        echo "<td>".$row['fecha']."</td>"; //contenido del echo se modifica
+                                        echo "<td>".$row['hora']."</td>"; //contenido del echo se modifica
+                                        if('mov'== 0){
+                                            echo "<td> SI </td>"; //contenido del echo se modifica
+                                        }else{
+                                            echo "<td> NO </td>"; //contenido del echo se modifica
+                                        }
+                                        // echo "<td>".$row['mov']." </td>"; //contenido del echo se modifica
+                                        echo "</tr>";
+                                        echo "</tbody>";
+                                    }
+                                } else {
+                                    echo "0 results";
+                                }
+                            ?>
                         </table>
                     </div>
                 </div>

@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -12,15 +15,13 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
         integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
-
-        <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="../css/estilos.css">
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="reloj/reloj1/reloj.js"></script>
-    <script src="reloj/reloj2/reloj2.js"></script>
-    <script src="reloj/reloj3/reloj3.js"></script>
-    <script src="reloj/reloj4/reloj4.js"></script>
+    <!-- <script src="../js/reloj/reloj.js"></script>
+    <script src="../js/reloj/reloj2.js"></script>
+    <script src="../js/reloj/reloj3.js"></script>
+    <script src="../js/reloj/reloj4.js"></script> -->
 
 </head>
 
@@ -38,22 +39,22 @@
                     <div class="collapse navbar-collapse" id="collapsibleNavbar">
                         <ul class="navbar-nav flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="panel.htm">Inicio</a>
+                                <a class="nav-link" href="panel.php">Inicio</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="tempyhum.htm">Temperatura - Humedad</a>
+                                <a class="nav-link" href="tempyhum.php">Temperatura - Humedad</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="co2Gas.htm">Gas - CO2</a>
+                                <a class="nav-link" href="co2Gas.php">Gas - CO2</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="mov.htm">Movimiento</a>
+                                <a class="nav-link" href="mov.php">Movimiento</a>
                             </li>
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a class="nav-link" href="#">Configuración</a>
-                            </li>
+                            </li> -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Cerrar Sesión</a>
+                                <a class="nav-link" href="cerrarsesion.php">Cerrar Sesión</a>
                             </li>
                         </ul>
                     </div>
@@ -65,14 +66,49 @@
                         <h2>Panel General</h2>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row superior">
                     <!-- primera fila de contenidos  -->
                     <div class="col-sm-6">
                         <!-- temperatura -->
                         <h2><i class="fas fa-temperature-high"></i> Temperatura</h2>
                         <div>
-                            <div id="gauge_div1" style="width:auto; height: auto;"></div>
-                            <!-- // el style no es necesario se se colocan las propiedades en auto porque ya estan por default -->
+                            <script type="text/javascript">
+                                google.charts.load('current', { 'packages': ['gauge'] });
+                                google.charts.setOnLoadCallback(drawChart);
+
+                                function drawChart() {
+
+                                    var data = google.visualization.arrayToDataTable([
+                                        ['Label', 'Value'],
+                                        ['°C', 0]
+                                    ]);
+
+                                    var options = {
+                                        width: 200, height: 200,
+                                        redFrom: 90, redTo: 100,
+                                        yellowFrom: 75, yellowTo: 90,
+                                        minorTicks: 5
+                                    };
+
+                                    var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+
+                                    chart.draw(data, options);
+
+                                    setInterval(function () {
+                                        var JSON = $.ajax({
+                                            url: "http://localhost/web_php/php/traedatostemp.php",
+                                            dataType: 'json',
+                                            async: false
+                                        }).responseText;
+                                        var respuesta = jQuery.parseJSON(JSON);
+                                        data.setValue(0, 1, respuesta[0].temp);
+                                        // data.setValue(1, 1, respuesta[0].hum);
+                                        chart.draw(data, options);
+                                    }, 180000);//cada media hora
+                                }
+                            </script>
+                            <div id="chart_div" style="width: 400px; height: auto;"></div>
+                            <!-- <div id="gauge_div1" style="width:auto; height: auto;"></div>  // el style no es necesario se se colocan las propiedades en auto porque ya estan por default -->
                             <!-- <input type="button" value="Go Faster" onclick="changeTemp(1)" />
                             <input type="button" value="Slow down" onclick="changeTemp(-1)" /> -->
                         </div>
@@ -80,54 +116,129 @@
                     <div class="col-sm-6">
                         <!-- humedad -->
                         <h2><i class="fas fa-tint"></i> Humedad</h2>
-                        <div id="gauge_div2" style="width:auto; height: auto;"></div>
+                        <div>
+                            <script type="text/javascript">
+                                google.charts.load('current', { 'packages': ['gauge'] });
+                                google.charts.setOnLoadCallback(drawChart);
+
+                                function drawChart() {
+
+                                    var data = google.visualization.arrayToDataTable([
+                                        ['Label', 'Value'],
+                                        ['%', 0]
+                                    ]);
+
+                                    var options = {
+                                        width: 200, height: 200,
+                                        redFrom: 90, redTo: 100,
+                                        yellowFrom: 75, yellowTo: 90,
+                                        minorTicks: 5
+                                    };
+
+                                    var chart = new google.visualization.Gauge(document.getElementById('chart_div1'));
+
+                                    chart.draw(data, options);
+
+                                    setInterval(function () {
+                                        var JSON = $.ajax({
+                                            url: "http://localhost/web_php/php/traedatoshum.php",
+                                            dataType: 'json',
+                                            async: false
+                                        }).responseText;
+                                        var respuesta = jQuery.parseJSON(JSON);
+                                        data.setValue(0, 1, respuesta[0].hum);
+                                        chart.draw(data, options);
+                                    }, 180000);//cada media hora
+                                }
+                            </script>
+                            <div id="chart_div1" style="width: 400px; height: auto;"></div>
+                            <!-- <div id="gauge_div1" style="width:auto; height: auto;"></div>  // el style no es necesario se se colocan las propiedades en auto porque ya estan por default -->
+                            <!-- <input type="button" value="Go Faster" onclick="changeTemp(1)" />
+                            <input type="button" value="Slow down" onclick="changeTemp(-1)" /> -->
+                        </div>
+                        <!-- <div id="gauge_div2" style="width:auto; height: auto;"></div> -->
                     </div>
                 </div>
                 <div class="row inferior">
                     <!-- segunda fila de contenidos  -->
-                    <div class="col-sm-4">
+                    <div class="col-sm-6">
                         <!-- gas -->
                         <h2><i class="fas fa-skull-crossbones"></i> Gas Natural</h2>
-                        <div id="gauge_div3" style="width:auto; height: auto;"></div>
+                        <script type="text/javascript">
+                            google.charts.load('current', { 'packages': ['gauge'] });
+                            google.charts.setOnLoadCallback(drawChart);
+
+                            function drawChart() {
+
+                                var data = google.visualization.arrayToDataTable([
+                                    ['Label', 'Value'],
+                                    ['ppm', 0]
+                                ]);
+
+                                var options = {
+                                    width: 200, height: 200,
+                                    redFrom: 90, redTo: 100,
+                                    yellowFrom: 75, yellowTo: 90,
+                                    minorTicks: 5
+                                };
+
+                                var chart = new google.visualization.Gauge(document.getElementById('chart_div2'));
+
+                                chart.draw(data, options);
+
+                                setInterval(function () {
+                                    var JSON = $.ajax({
+                                        url: "http://localhost/web_php/php/traedatosgas.php",
+                                        dataType: 'json',
+                                        async: false
+                                    }).responseText;
+                                    var respuesta = jQuery.parseJSON(JSON);
+                                    data.setValue(0, 1, respuesta[0].gas);
+                                    chart.draw(data, options);
+                                }, 180000);//cada media hora
+                            }
+                        </script>
+                        <div id="chart_div2" style="width: 400px; height: auto;"></div>
+                        <!-- <div id="gauge_div3" style="width:auto; height: auto;"></div> -->
                     </div>
-                    <div class="col-sm-4">
-                        <h2><i class="fas fa-running"></i> Movimiento</h2>
-                        
-
-                        
-                        <div  class="icono">
-                           <?php
-                           
-
-                                require_once "reloj/mov/conexion.php";
-
-                                $sql = "SELECT mov FROM hcsr501 order by id_mov DESC limit 1";
-                                $result = mysqli_query($con, $sql);
-                                
-                                if (mysqli_num_rows($result) > 0) {
-                                    // output data of each row
-                                    while($row = mysqli_fetch_assoc($result)) {
-                                        // echo " Name: " . $row["mov"].  "<br>";
-                                        if( $row["mov"] === '0'){
-                                            echo "<i class='fas fa-male'></i>";
-                                        }else{
-                                           echo "<i class='fas fa-running'></i>";
-                                        }
-                                    }
-                                } else {
-                                    echo "0 results";
-                                }
-                                
-                                mysqli_close($con);
-                            ?>
-                        </div>
-                     
-                        <!-- <i class="fas fa-male"></i> PERSONA SIN MOVIMIENTO CAMBIAR CON ENABLE DISABLED DEPENDIENDO DE VALOR EN LA BASE DE DATOS OBTENIDO-->
-
-                    </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-6">
                         <h2><i class="fas fa-smog"></i> CO2</h2>
-                        <div id="gauge_div4" style="width:auto; height: auto;"></div>
+                        <script type="text/javascript">
+                            google.charts.load('current', { 'packages': ['gauge'] });
+                            google.charts.setOnLoadCallback(drawChart);
+
+                            function drawChart() {
+
+                                var data = google.visualization.arrayToDataTable([
+                                    ['Label', 'Value'],
+                                    ['ppm', 0]
+                                ]);
+
+                                var options = {
+                                    width: 200, height: 200,
+                                    redFrom: 90, redTo: 100,
+                                    yellowFrom: 75, yellowTo: 90,
+                                    minorTicks: 5
+                                };
+
+                                var chart = new google.visualization.Gauge(document.getElementById('chart_div3'));
+
+                                chart.draw(data, options);
+
+                                setInterval(function () {
+                                    var JSON = $.ajax({
+                                        url: "http://localhost/web_php/php/traedatosco2.php",
+                                        dataType: 'json',
+                                        async: false
+                                    }).responseText;
+                                    var respuesta = jQuery.parseJSON(JSON);
+                                    data.setValue(0, 1, respuesta[0].aire);
+                                    chart.draw(data, options);
+                                }, 180000);//cada media hora
+                            }
+                        </script>
+                        <div id="chart_div3" style="width: 400px; height: auto;"></div>
+                        <!-- <div id="gauge_div4" style="width:auto; height: auto;"></div> -->
                     </div>
                 </div>
             </div>

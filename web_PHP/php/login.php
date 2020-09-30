@@ -4,31 +4,23 @@ require_once('conexion.php');
 $usuario = $_POST['usuario'];
 $pass = $_POST['pass'];
 
-$sql = "SELECT usuario, pass FROM usuario"; 
-$query = $con -> prepare($sql); 
-$query -> execute(); 
-$results = $query -> fetchAll(PDO::FETCH_OBJ); 
+$sql = "SELECT usuario, pass FROM usuario";
+ $result = mysqli_query($con, $sql);
 
-if($query -> rowCount() > 0)   { 
-foreach($results as $result) { 
-    echo $result -> usuario;
-    echo $result -> pass;
-    if(($result -> usuario === $usuario)  && ($result -> pass === $pass)){
-        header("Location: panel.html");
-    } else {
-        echo '<script type="text/JavaScript">  
-     window.alert("Datos Incorrectos"); 
-     window.location= "login.html";
-     </script>' 
-; 
-        //sleep(7);
-        // header("Location: login.html");
-    }
-    // echo "<tr>
-// <td>".$result -> usuario."</td>
-// <td>".$result -> pass."</td>
-// </tr>";
-   }
-}
+ if (mysqli_num_rows($result) > 0) {
+     // output data of each row
+     while($row = mysqli_fetch_assoc($result)) {
+        if(($usuario === $row['usuario']) && ($pass === $row['pass'])) {
+            session_start();
+            $_SESSION["usuario"] = $usuario;
+            header("Location: panel.php");
+        }
+        else {
+            echo "Datos incorrectos";
+        }
+     }
+ } else {
+     echo "0 results";
+ }
 ?>
- 
+

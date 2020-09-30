@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -12,8 +15,8 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
         integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <!-- CSS -->
-    <link rel="stylesheet" href="css/estilos.css">
-    <link rel="stylesheet" href="css/boton.css">
+    <link rel="stylesheet" href="../css/estilos.css">
+    <link rel="stylesheet" href="../css/boton.css">
 
     <!-- script del gráfico de torta 3d -->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -36,20 +39,20 @@
                     <div class="collapse navbar-collapse" id="collapsibleNavbar">
                         <ul class="navbar-nav flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="panel.htm">Inicio</a>
+                                <a class="nav-link" href="panel.php">Inicio</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="tempyhum.htm">Temperatura - Humedad</a>
+                                <a class="nav-link" href="tempyhum.php">Temperatura - Humedad</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="co2Gas.htm">Gas - CO2</a>
+                                <a class="nav-link" href="co2Gas.php">Gas - CO2</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="mov.htm">Movimiento</a>
+                                <a class="nav-link" href="mov.php">Movimiento</a>
                             </li>
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a class="nav-link" href="#">Configuración</a>
-                            </li>
+                            </li> -->
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Cerrar Sesión</a>
                             </li>
@@ -70,19 +73,28 @@
                 </div>
                 <div class="row graficosTorta">
                     <div class="col-sm-12 datetime">
-                    <h5>Seleccione Día </h5>
-                    <form action="tempyhum.php" method="post">
-                    <input name='dia' type='date' id='myDate' value=''>
-                    <button type="submit">Buscar</button>
-                    </form>
+                        <h5>Seleccione Día </h5>
+                        <form action="tempyhum.php" method="post">
+                        <input name='dia' type='date' id='myDate'  value="">
+                        <button type="submit" value="listo">Buscar</button>
+                        
                         <?php
-                            $dia=$_POST['dia'];
-                            echo $dia;
+                                error_reporting(0);
+                                $dia=$_POST['dia'];
+                                echo $dia;
+                                error_reporting(E_ALL);
+                                // $dia=$_POST['dia'];
+                                // echo $dia;
+                        
+                                         
+                            
                         ?>
+                        </form>
+                        
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-9">
+                    <div class="col-sm-8">
                         <table class="table table-bordered">
                         <thead>
                                 <tr>
@@ -194,10 +206,11 @@
                                     // output data of each row
                                     while($row5 = mysqli_fetch_assoc($result5)) {
                                         // echo "id: " . $row["id"]. " - Temp: " . $row["temp"].  "<br>";
-                                    
+                                        
                                         echo "<tr>";
                                         echo "<th>Promedio</td>"; //contenido del echo se modifica
-                                        echo "<td>".$row5['AVG(temp)']." °C</td>"; //contenido del echo se modifica
+                                        echo "<td>".round($row5['AVG(temp)'], 2)." °C</td>"; //contenido del echo se modifica
+                                        // $data1 = bcdiv($valor, '1', 1);
                                     }
                                 } else {
                                     echo "0 results";
@@ -208,7 +221,7 @@
                                     // output data of each row
                                     while($row6 = mysqli_fetch_assoc($result6)) {
                                         // echo "id: " . $row["id"]. " - Temp: " . $row["temp"].  "<br>";
-                                        echo "<td>".$row6['AVG(hum)']." %</td>"; //contenido del echo se modifica
+                                        echo "<td>".round($row6['AVG(hum)'], 2)." %</td>"; //contenido del echo se modifica
                                         echo "</tr>";
                                     }
                                 } else {
@@ -220,73 +233,6 @@
                                     <td>°C</td>
                                     <td>H%</td>
                                 </tr> -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="row backgroundColor2">
-                    <div class="col-sm-12">
-                        <h3 class="historial">Representacion Gráfica</h3>
-                    </div>
-                </div>
-                <div class="row graficosTorta">
-                    <div class="col-sm-12 datetime">
-                        <h5>Seleccione Período </h5>
-                        <h6>Desde:</h6>
-                        <input type="date" id="myDate" value="">
-                        <h6>Hasta:</h6>
-                        <input type="date" id="myDate" value="">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-10">
-
-                        <div class="botonera btn">
-
-                            <h6>Cartesiano</h6>
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
-                            <h6>Torta</h6>
-                        </div>
-                        <!-- <div class="row graficosTorta">
-                            <div class="col-sm-6 grafTorta">
-                                <div id="temp" style="width: 600px; height: 500px;"></div>
-                            </div>
-                            <div class="col-sm-6 grafTorta">
-                                <div id="hum" style="width: 600px; height: 500px;"></div>
-                            </div>
-                        </div> -->
-                        <div class="row graficosTorta">
-                            <div class="col-sm-12 grafTorta">
-                                <div id="chart_div" style="height: 600px;"></div>
-                            </div>
-                        </div>
-                        <!-- <div -->
-                    </div>
-                    <div class="col-sm-2">
-                        <table class="table">
-                            <tbody id="sborde">
-                                <tr>
-                                    <th>Máximo</th>
-                                    <td>°C</td>
-                                    <td>H%</td>
-                                </tr>
-                            </tbody>
-                            <tbody id="sborde">
-                                <tr>
-                                    <th>Mínimo</th>
-                                    <td>°C</td>
-                                    <td>H%</td>
-                                </tr>
-                            </tbody>
-                            <tbody id="sborde">
-                                <tr>
-                                    <th>Promedio</th>
-                                    <td>°C</td>
-                                    <td>H%</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>

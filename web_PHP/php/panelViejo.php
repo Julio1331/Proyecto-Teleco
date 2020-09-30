@@ -12,13 +12,15 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
         integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
+
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
     <link rel="stylesheet" href="css/estilos.css">
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="reloj/reloj.js"></script>
-    <script src="reloj/reloj2.js"></script>
-    <script src="reloj/reloj3.js"></script>
-    <script src="reloj/reloj4.js"></script>
+    <script src="reloj/reloj1/reloj.js"></script>
+    <script src="reloj/reloj2/reloj2.js"></script>
+    <script src="reloj/reloj3/reloj3.js"></script>
+    <script src="reloj/reloj4/reloj4.js"></script>
 
 </head>
 
@@ -47,9 +49,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="mov.htm">Movimiento</a>
                             </li>
-                            <!-- <li class="nav-item">
+                            <li class="nav-item">
                                 <a class="nav-link" href="#">Configuración</a>
-                            </li> -->
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Cerrar Sesión</a>
                             </li>
@@ -59,7 +61,9 @@
             </div>
             <div class="col-sm-10">
                 <div class="row backgroundColor">
-                    <div class="col-sm-12"><h2>Panel General</h2></div>
+                    <div class="col-sm-12">
+                        <h2>Panel General</h2>
+                    </div>
                 </div>
                 <div class="row">
                     <!-- primera fila de contenidos  -->
@@ -67,7 +71,8 @@
                         <!-- temperatura -->
                         <h2><i class="fas fa-temperature-high"></i> Temperatura</h2>
                         <div>
-                            <div id="gauge_div1" style="width:auto; height: auto;"></div>  <!-- // el style no es necesario se se colocan las propiedades en auto porque ya estan por default -->
+                            <div id="gauge_div1" style="width:auto; height: auto;"></div>
+                            <!-- // el style no es necesario se se colocan las propiedades en auto porque ya estan por default -->
                             <!-- <input type="button" value="Go Faster" onclick="changeTemp(1)" />
                             <input type="button" value="Slow down" onclick="changeTemp(-1)" /> -->
                         </div>
@@ -87,9 +92,50 @@
                     </div>
                     <div class="col-sm-4">
                         <h2><i class="fas fa-running"></i> Movimiento</h2>
-                        <div class="icono"><i class="fas fa-running"></i></div>
-                        <!-- <i class="fas fa-male"></i> PERSONA SIN MOVIMIENTO CAMBIAR CON ENABLE DISABLED DEPENDIENDO DE VALOR EN LA BASE DE DATOS OBTENIDO-->
                         
+
+                        
+                        <div  class="icono">
+                           <?php
+                           
+
+                        
+                           $servername = "localhost";
+                           $username = "root";
+                           $password = "";
+                           $dbname = "id13218228_lecturadatos";
+                           
+                           // Create connection
+                           $con = mysqli_connect($servername, $username, $password, $dbname);
+                           // Check connection
+                           if (!$con) {
+                               die("Connection failed: " . mysqli_connect_error());
+                           }  
+                           
+
+                                $sql = "SELECT mov FROM hcsr501 order by id_mov DESC limit 1";
+                                $result = mysqli_query($con, $sql);
+                                
+                                if (mysqli_num_rows($result) > 0) {
+                                    // output data of each row
+                                    while($row = mysqli_fetch_assoc($result)) {
+                                        // echo " Name: " . $row["mov"].  "<br>";
+                                        if( $row["mov"] === '0'){
+                                            echo "<i class='fas fa-male'></i>";
+                                        }else{
+                                           echo "<i class='fas fa-running'></i>";
+                                        }
+                                    }
+                                } else {
+                                    echo "0 results";
+                                }
+                                
+                                mysqli_close($con);
+                            ?>
+                        </div>
+                     
+                        <!-- <i class="fas fa-male"></i> PERSONA SIN MOVIMIENTO CAMBIAR CON ENABLE DISABLED DEPENDIENDO DE VALOR EN LA BASE DE DATOS OBTENIDO-->
+
                     </div>
                     <div class="col-sm-4">
                         <h2><i class="fas fa-smog"></i> CO2</h2>
