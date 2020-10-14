@@ -45,7 +45,7 @@ session_start();
                                 <a class="nav-link" href="tempyhum.php">Temperatura - Humedad</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="co2Gas.php">Gas - CO2</a>
+                                <a class="nav-link" href="co2Gas.php">Gas - CO</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="mov.php">Movimiento</a>
@@ -53,9 +53,9 @@ session_start();
                             <!-- <li class="nav-item">
                                 <a class="nav-link" href="#">Configuración</a>
                             </li> -->
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a class="nav-link" href="#">Cerrar Sesión</a>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </nav>

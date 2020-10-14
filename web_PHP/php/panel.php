@@ -45,7 +45,7 @@ session_start();
                                 <a class="nav-link" href="tempyhum.php">Temperatura - Humedad</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="co2Gas.php">Gas - CO2</a>
+                                <a class="nav-link" href="co2Gas.php">Gas - CO</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="mov.php">Movimiento</a>
@@ -53,9 +53,9 @@ session_start();
                             <!-- <li class="nav-item">
                                 <a class="nav-link" href="#">Configuración</a>
                             </li> -->
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a class="nav-link" href="cerrarsesion.php">Cerrar Sesión</a>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </nav>
@@ -94,6 +94,7 @@ session_start();
 
                                     chart.draw(data, options);
 
+                                    //ACTUALIZA EL VALOR DE LOS RELOJES CADA 1300 mseg
                                     setInterval(function () {
                                         var JSON = $.ajax({
                                             url: "http://localhost/web_php/php/traedatostemp.php",
@@ -104,7 +105,17 @@ session_start();
                                         data.setValue(0, 1, respuesta[0].temp);
                                         // data.setValue(1, 1, respuesta[0].hum);
                                         chart.draw(data, options);
-                                    }, 180000);//cada media hora
+                                    }, 1300);//cada media hora
+
+                                    //CARGA EL ÚLTIMO VALOR DE LA BASE DE DATOS AL ENTRAR A LA PÁGINA, Y NO LOS ACTUALIZA A MENOS QUE SE RECARGE 
+                                        // var JSON = $.ajax({
+                                        //     url: "http://localhost/web_php/php/traedatostemp.php",
+                                        //     dataType: 'json',
+                                        //     async: false
+                                        // }).responseText;
+                                        // var respuesta = jQuery.parseJSON(JSON);
+                                        // data.setValue(0, 1, respuesta[0].temp);
+                                        // chart.draw(data, options);
                                 }
                             </script>
                             <div id="chart_div" style="width: 400px; height: auto;"></div>
@@ -139,6 +150,7 @@ session_start();
 
                                     chart.draw(data, options);
 
+                                    //ACTUALIZA EL VALOR DE LOS RELOJES CADA 1300 mseg
                                     setInterval(function () {
                                         var JSON = $.ajax({
                                             url: "http://localhost/web_php/php/traedatoshum.php",
@@ -148,7 +160,17 @@ session_start();
                                         var respuesta = jQuery.parseJSON(JSON);
                                         data.setValue(0, 1, respuesta[0].hum);
                                         chart.draw(data, options);
-                                    }, 180000);//cada media hora
+                                    }, 1300);//cada media hora
+
+                                    //CARGA EL ÚLTIMO VALOR DE LA BASE DE DATOS AL ENTRAR A LA PÁGINA, Y NO LOS ACTUALIZA A MENOS QUE SE RECARGE 
+                                        // var JSON = $.ajax({
+                                        //     url: "http://localhost/web_php/php/traedatoshum.php",
+                                        //     dataType: 'json',
+                                        //     async: false
+                                        // }).responseText;
+                                        // var respuesta = jQuery.parseJSON(JSON);
+                                        // data.setValue(0, 1, respuesta[0].hum);
+                                        // chart.draw(data, options);
                                 }
                             </script>
                             <div id="chart_div1" style="width: 400px; height: auto;"></div>
@@ -186,6 +208,7 @@ session_start();
 
                                 chart.draw(data, options);
 
+                                //ACTUALIZA EL VALOR DE LOS RELOJES CADA 1300 mseg 
                                 setInterval(function () {
                                     var JSON = $.ajax({
                                         url: "http://localhost/web_php/php/traedatosgas.php",
@@ -195,14 +218,25 @@ session_start();
                                     var respuesta = jQuery.parseJSON(JSON);
                                     data.setValue(0, 1, respuesta[0].gas);
                                     chart.draw(data, options);
-                                }, 180000);//cada media hora
+                                }, 1300);//cada media hora
+
+
+                                //CARGA EL ÚLTIMO VALOR DE LA BASE DE DATOS AL ENTRAR A LA PÁGINA, Y NO LOS ACTUALIZA A MENOS QUE SE RECARGE 
+                                    // var JSON = $.ajax({
+                                    //     url: "http://localhost/web_php/php/traedatosgas.php",
+                                    //     dataType: 'json',
+                                    //     async: false
+                                    // }).responseText;
+                                    // var respuesta = jQuery.parseJSON(JSON);
+                                    // data.setValue(0, 1, respuesta[0].gas);
+                                    // chart.draw(data, options);
                             }
                         </script>
                         <div id="chart_div2" style="width: 400px; height: auto;"></div>
                         <!-- <div id="gauge_div3" style="width:auto; height: auto;"></div> -->
                     </div>
                     <div class="col-sm-6">
-                        <h2><i class="fas fa-smog"></i> CO2</h2>
+                        <h2><i class="fas fa-smog"></i> CO</h2>
                         <script type="text/javascript">
                             google.charts.load('current', { 'packages': ['gauge'] });
                             google.charts.setOnLoadCallback(drawChart);
@@ -225,6 +259,8 @@ session_start();
 
                                 chart.draw(data, options);
 
+
+                                //ACTUALIZA EL VALOR DE LOS RELOJES CADA 1300 mseg
                                 setInterval(function () {
                                     var JSON = $.ajax({
                                         url: "http://localhost/web_php/php/traedatosco2.php",
@@ -234,7 +270,17 @@ session_start();
                                     var respuesta = jQuery.parseJSON(JSON);
                                     data.setValue(0, 1, respuesta[0].aire);
                                     chart.draw(data, options);
-                                }, 180000);//cada media hora
+                                }, 1300);//cada media hora
+
+                                //CARGA EL ÚLTIMO VALOR DE LA BASE DE DATOS AL ENTRAR A LA PÁGINA, Y NO LOS ACTUALIZA A MENOS QUE SE RECARGE
+                                    // var JSON = $.ajax({
+                                    //     url: "http://localhost/web_php/php/traedatosco2.php",
+                                    //     dataType: 'json',
+                                    //     async: false
+                                    // }).responseText;
+                                    // var respuesta = jQuery.parseJSON(JSON);
+                                    // data.setValue(0, 1, respuesta[0].aire);
+                                    // chart.draw(data, options);
                             }
                         </script>
                         <div id="chart_div3" style="width: 400px; height: auto;"></div>

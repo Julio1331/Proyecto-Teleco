@@ -7,7 +7,7 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CO2 y Gas</title>
+    <title>CO y Gas</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -46,7 +46,7 @@ session_start();
                                 <a class="nav-link" href="tempyhum.php">Temperatura - Humedad</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="co2Gas.php">Gas - CO2</a>
+                                <a class="nav-link" href="co2Gas.php">Gas - CO</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="mov.php">Movimiento</a>
@@ -54,9 +54,9 @@ session_start();
                             <!-- <li class="nav-item">
                                 <a class="nav-link" href="#">Configuración</a>
                             </li> -->
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a class="nav-link" href="#">Cerrar Sesión</a>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </nav>
@@ -64,7 +64,7 @@ session_start();
             <div class="col-sm-10">
                 <div class="row backgroundColor">
                     <div class="col-sm-12">
-                        <h2>CO2 y GAS</h2>
+                        <h2>CO y GAS</h2>
                     </div>
                 </div>
                 <div class="row backgroundColor2">
@@ -95,11 +95,11 @@ session_start();
                                     <th>Fecha</th>
                                     <th>Hora</th>
                                     <th>GAS</th>
-                                    <th>CO2</th>
+                                    <th>CO</th>
                                 </tr>
                             </thead>
                             <?php
-                                //traigo co2 y gas
+                                //traigo co y gas
                                 require_once('conexion.php');
                                 $sql = "SELECT * FROM mq1 WHERE fecha='$dia' ORDER BY id_G DESC LIMIT 12";
                                 $result = mysqli_query($con, $sql);

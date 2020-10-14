@@ -1,5 +1,3 @@
-//#include <dummy.h>
-
 // Incluyendo las librerías del ESP8266 y el DHT
 #include <ESP8266WiFi.h> //para transmision wifi
 #include "DHT.h"        // para sensor de humedad y temperatura
